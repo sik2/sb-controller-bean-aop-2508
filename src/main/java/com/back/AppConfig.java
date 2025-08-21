@@ -1,16 +1,16 @@
 package com.back;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@RequiredArgsConstructor
 @Configuration
 public class AppConfig {
 
-    private final AppConfig self;
+    @Autowired
+    private AppConfig self;
 
     @Bean
     PersonRepository personRepository() {
