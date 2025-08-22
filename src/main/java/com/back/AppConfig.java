@@ -33,7 +33,7 @@ public class AppConfig {
     public ApplicationRunner baseInitDataApplicationRunner() {
         return args -> {
             self.work1();
-            this.work2();
+            self.work2();
         };
     }
 
