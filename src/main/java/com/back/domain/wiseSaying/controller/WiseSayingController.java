@@ -60,7 +60,23 @@ public class WiseSayingController {
                 + "</ul>";
     }
 
-    @GetMapping("/wiseSayings/delete/{id}")
+
+    @GetMapping("/wiseSayings/{id}")
+    @ResponseBody
+    public String detail(@PathVariable int id) {
+        WiseSaying wiseSaying = findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("%d번 명언은 존재하지 않습니다.".formatted(id))
+                );
+
+        return """
+                <h1>번호 : %d</h1>
+                <div>명언 : %s</div>
+                <div>작가 : %s</div>
+                """.formatted(wiseSaying.getId(), wiseSaying.getContent(), wiseSaying.getAuthor());
+    }
+
+
+    @GetMapping("/wiseSayings/{id}/delete")
     @ResponseBody
     public String delete(@PathVariable int id) {
         WiseSaying wiseSaying = findById(id)
@@ -72,7 +88,7 @@ public class WiseSayingController {
         return "%d 번 명언이 삭제되었습니다.".formatted(id);
     }
 
-    @GetMapping("/wiseSayings/modify/{id}")
+    @GetMapping("/wiseSayings/{id}/modify")
     @ResponseBody
     public String modify(
             @PathVariable int id,
