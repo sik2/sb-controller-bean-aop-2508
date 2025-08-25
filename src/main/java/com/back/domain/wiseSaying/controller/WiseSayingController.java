@@ -3,6 +3,9 @@ package com.back.domain.wiseSaying.controller;
 import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.service.WiseSayingService;
 import lombok.RequiredArgsConstructor;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,11 +60,23 @@ public class WiseSayingController {
                 .orElseThrow(() -> new IllegalArgumentException("%d번 명언은 존재하지 않습니다.".formatted(id))
                 );
 
+        // 마크다운 파서 생성
+        Parser parser = Parser.builder().build();
+
+        // 문자열을 파싱해서 Node 트리 구조로 변환
+        Node document = parser.parse(wiseSaying.getContent());
+
+        // HTML 렌더러 생성
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+
+        // Node를 HTML 문자열로 렌더링
+        String html = renderer.render(document);
+
         return """
                 <h1>번호 : %d</h1>
-                <div>명언 : %s</div>
                 <div>작가 : %s</div>
-                """.formatted(wiseSaying.getId(), wiseSaying.getContent(), wiseSaying.getAuthor());
+                <div>%s</div>
+                """.formatted(wiseSaying.getId(), wiseSaying.getAuthor(), html);
     }
 
 
