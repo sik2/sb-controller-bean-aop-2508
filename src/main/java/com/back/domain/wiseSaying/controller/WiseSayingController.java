@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 @Controller
 public class WiseSayingController {
     private final WiseSayingService wiseSayingService;
+    private final HtmlRenderer htmlRenderer;
+    private final Parser parser;
 
     @GetMapping("/wiseSayings/write")
     @ResponseBody
@@ -60,17 +62,11 @@ public class WiseSayingController {
                 .orElseThrow(() -> new IllegalArgumentException("%d번 명언은 존재하지 않습니다.".formatted(id))
                 );
 
-        // 마크다운 파서 생성
-        Parser parser = Parser.builder().build();
-
         // 문자열을 파싱해서 Node 트리 구조로 변환
         Node document = parser.parse(wiseSaying.getContent());
 
-        // HTML 렌더러 생성
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-
         // Node를 HTML 문자열로 렌더링
-        String html = renderer.render(document);
+        String html = htmlRenderer.render(document);
 
         return """
                 <h1>번호 : %d</h1>
